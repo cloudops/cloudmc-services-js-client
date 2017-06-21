@@ -1,0 +1,15 @@
+{
+  "name": "cloudmc-api-lib",
+  "version": "1.0.0",
+  "description": "The CloudMC API JavaScript client library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "es6-promise": "^4.1.0",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
