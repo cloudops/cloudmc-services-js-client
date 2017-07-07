@@ -8,11 +8,50 @@
 	require('es6-promise').polyfill();
 	require('isomorphic-fetch');
 
+	// Inspired by https://gist.github.com/joepie91/2664c85a744e6bd0629c
+	function delay(millis) {
+		return new Promise((resolve) => setTimeout(resolve, millis));
+	}
+
 	function buildHeadersWithApiKey(apiKey) {
 		const headers = new Headers();
 		headers.set('MC-Api-Key', apiKey);
 		headers.set('Content-Type', 'application/json');
 		return headers;
+	}
+
+	// To check tasks, we bounce back and forth between handleTask and pollTaskStatus.
+	function pollTaskStatus(endpoint, apiKey, taskId) {
+		return fetch(`${endpoint}/tasks/${taskId}`, { headers: buildHeadersWithApiKey(apiKey) })
+			.then(res => res.json())
+			.then(data => handleTask(endpoint, apiKey, data));
+	}
+
+	function baseHandleTask(endpoint, apiKey, id, status, result) {
+		if (!id) {
+			// Not a promise, ignore.
+			return Promise.resolve(result);
+		}
+
+		if (status === 'SUCCESS') {
+			return Promise.resolve(result || {});
+		} else if (status === 'FAILED') {
+			// TODO Error code.
+			return Promise.reject(new Error('Operation failed.'));
+		} else if (status === 'PENDING') {
+			// TODO Start polling interval very low and increase gradually - using a generator?
+			return delay(1000).then(() => pollTaskStatus(endpoint, apiKey, id));
+		}
+
+		return Promise.reject(new Error(`Something went horribly wrong while trying to process API response "${JSON.stringify(result)}"`));
+	}
+
+	function handleTask(endpoint, apiKey, body) {
+		return baseHandleTask(endpoint, apiKey, body.data.id, body.data.status, body.data.result);
+	}
+
+	function handleNewTask(endpoint, apiKey, body) {
+		return baseHandleTask(endpoint, apiKey, body.taskId, body.taskStatus, body.data);
 	}
 
 	function baseDoApiCall(target) {
@@ -22,8 +61,8 @@
 		const idPart = id ? ('/' + id) : '';
 		const operationPart = operation ? ('?operation=' + operation) : '';
 		return fetch(`${endpoint}/services/${serviceCode}/${environmentName}/${entityType}${idPart}${operationPart}`, { headers, method, body })
-			// TODO handle tasks
-			.then(res => res.json().data);
+			.then(res => res.json())
+			.then(data => handleNewTask(endpoint, apiKey, data));
 	}
 
 	function doApiCall(target, extensions) {
