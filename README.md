@@ -4,7 +4,7 @@ The CloudMC API, now available with 75% less type safety!
 
 ## Installation
 
-¯\\_(ツ)_/¯
+¯\\\_(ツ)_/¯
 
 ## Usage
 
