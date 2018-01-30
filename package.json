@@ -2,10 +2,12 @@
   "name": "cloudmc-services-js-client",
   "version": "1.0.0",
   "description": "The CloudMC API JavaScript client library.",
-  "main": "src/services.js",
+  "main": "./dist/index.js",
+  "browser": "./dist/bundle.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d out"
+    "build-node": "babel src -d dist",
+    "build-web": "webpack"
   },
   "author": "",
   "license": "MIT",
@@ -14,6 +16,8 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.10.0"
   }
 }
