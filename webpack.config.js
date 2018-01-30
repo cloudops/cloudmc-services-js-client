@@ -5,7 +5,10 @@ module.exports = {
 	entry: './src/index.js',
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'bundle.min.js'
+		filename: 'bundle.min.js',
+		library: 'CmcFactory',
+		libraryTarget: 'window',
+		libraryExport: 'default'
 	},
 	module: {
 		rules: [

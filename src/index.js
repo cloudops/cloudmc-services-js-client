@@ -5,7 +5,7 @@
 import 'isomorphic-fetch';
 
 import PollingResolver from './PollingResolver';
-import ApiKeyAuthenticator from './apiKeyAuthenticator';
+import ApiKeyAuthenticator from './ApiKeyAuthenticator';
 
 function buildAuthenticatedHeaders(authenticator) {
 	const headers = new Headers();
