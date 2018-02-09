@@ -9,7 +9,9 @@ The CloudMC API, now available with 75% less type safety!
 ## Usage
 
 ```js
-const cmc = require('./index')('https://api.your.cloudmc/v1', 'your_api_key'),
+import cmcFactory from 'cloudmc-services-js-client';
+
+const cmc = cmcFactory('https://api.your.cloudmc/v1', { apiKey: 'your_api_key' }),
     sandbox = cmc('compute', 'sandbox');
 
 sandbox.instances().list()
